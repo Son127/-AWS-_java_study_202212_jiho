@@ -2,6 +2,8 @@ package j12_배열;
 
 import java.util.Scanner;
 
+import javax.xml.transform.stax.StAXSource;
+
 public class J12_UserService {
 
 	private Scanner scanner; // 클래스를 만들때부터 스캐너가 생성 
@@ -47,7 +49,7 @@ public class J12_UserService {
 		System.out.println("q. 프로그램 종료");
 		System.out.println();
 	}
-//	
+
 	private void showUsers() {
 		J12_User[] users = userRepository.getUserTable();
 		
@@ -78,15 +80,107 @@ public class J12_UserService {
 		userRepository.saveUser(user);
 	}
 
-	private void findUser() {
-		J12_User users = userRepository.findUserByUsername(null);
-		System.out.println("사용자 이름 : ");
-		users.setUsername(scanner.nextLine());
-		
-		
+	private J12_User verifUsername() {
+		String username = null;
+		System.out.println("ㅅㅇㅈㅇㄹ");
+		username = scanner.nextLine();
+		return userRepository.findUserByUsername(username);
 	}
 	
 	
+	private void showUser () {                                                                                                                                                
+		J12_User user = null;
+		
+		System.out.println("회원조회");
+		user = verifUsername();
+		
+		if(user == null) {
+			System.out.println("없음");
+			return;
+		}
+		
+		System.out.println(user.toString());
+		
+	}
+	
+	private void updateUser() {
+		J12_User user = verifUsername();
+		if(user == null) {
+			System.out.println("없는 이름입;니ㅏㄷㅇ.");
+			return;
+		}
+		boolean loopFlag = true;
+		char select = '\0';
+		
+		while(loopFlag) {
+			showUpdateMenu(user);
+			select = inputSelect("수정");
+			loopFlag = updateUser(user, select);
+		}
+	}
+	private void showUpdateMenu(J12_User user) {
+		System.out.println("수정메뉴");
+		System.out.println("사용자 이름 :" + user.getUsername());
+		System.out.println();
+		System.out.println("1. 비밀번호 변경");
+		System.out.println("2. 이름 변경");
+		System.out.println("3. 이메일 변경");
+		System.out.println("b. 뒤로가기");
+		System.out.println();
+	}
+	private void updataPassword(J12_User user) {
+		String oldPassword = null;
+		String newPassword = null;
+		String cofirmPassword = null;
+		
+		System.out.println("비번변경");
+		
+		System.out.println( "기존 비번 입력: ");
+		
+		if(!comparPassword(user.getPassword(), oldPassword)) {
+			System.out.println("비번 일치 안함");
+			return;
+		}
+		System.out.println("새비번 입력:");
+		newPassword = scanner.nextLine();
+		System.out.println("새 비번 확인");
+		cofirmPassword = scanner.nextLine();
+		
+		if(!comparPassword(newPassword, cofirmPassword)) {
+			System.out.println("새비번 일치 안함");
+			return;
+		}
+		user.setPassword(newPassword);
+		System.out.println("비밀번호 변경완료");
+		
+	}
+	
+	private void updatePassWord(J12_User user) {
+		
+	}
+	private boolean comparPassword(String perPassword, String nextPassword) {
+		return prePassword.equals
+	}
+	
+	private boolean updateMenu(J12_User user, char select) {
+		boolean flag =true;
+		
+		if(isBack(select)) {
+			flag = false;
+			
+		}else {
+			if(select == '1') {
+				updatePassWord(user);
+			}else if(select == '2') {
+				
+			}else if(select == '3') {
+				
+			}else if(select == '4') {
+			
+			}else {
+		}
+		
+		
 	private boolean mainMenu(char select) {
 		boolean flag =true;
 		
@@ -99,8 +193,8 @@ public class J12_UserService {
 		}else if(select == '2') {
 				registerUser();
 		}else if(select == '3') {
-				findUser();
-		}else if(select =='4') {
+				
+		}else if(select == '4') {
 			
 		}else {
 			System.out.println(getSelectedErrormessage());
