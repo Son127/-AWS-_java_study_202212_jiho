@@ -36,5 +36,20 @@ public class J12_UserRepository {
 		}
 	}
 	
-	
+	public J12_User findUserByUsername(String username){
+		J12_User user = null;
+		
+		for(J12_User u : userTable) { // 객체는  null체크를 항상 해야한다.
+			if(u == null) {
+				continue;// 만나면 해당 반복을 탈출 후 다음 반복 실행
+			}
+			
+			if(u.getUsername().equals(username)) {
+				user = u;
+				break;
+			}
+		}
+		
+		return user;
+	}
 }

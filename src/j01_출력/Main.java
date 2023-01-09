@@ -13,16 +13,16 @@ public class Main {
 		h = scanner.nextInt();
 		m = scanner.nextInt();
 		
-		if(m < 46) {
-			h = h - 1;
-			m = (m - 45) + 60;
-		}else {
-			m = m - 45;
-		}
-		if(h < 0 || h == 0) {
-			h = h + 24;
-			m = (m - 45) + 60;
-		}
-		System.out.println(h + " " + m);
+		 if(m < 45) {
+			h--;
+			m = (m - 45) + 60;	 	
+			if(h < 0) {
+				h = 23;
+		 }System.out.println(h + " " + m);
+		 }
+		 else {
+			 m-=45;
+			 System.out.println(h + " " + m);
+		 }
 	}
 }

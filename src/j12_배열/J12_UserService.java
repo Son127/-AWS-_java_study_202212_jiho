@@ -5,13 +5,14 @@ import java.util.Scanner;
 public class J12_UserService {
 
 	private Scanner scanner; // 클래스를 만들때부터 스캐너가 생성 
+	private J12_UserRepository userRepository;
 
-//	public J12_UserService(Scanner scanner) {
-//		this.Scanner.scanner 
 //	}
-	
-	public J12_UserService() { // <- 이객체가 생성이 되야지만 스캐너가 생긴다.
-		scanner = new Scanner(System.in);  
+//  이객체가 생성이 되야지만 스캐너가 생긴다.
+
+	public J12_UserService(J12_UserRepository userRepository) { 
+		scanner = new Scanner(System.in); 
+		this.userRepository = userRepository;
 	}
 
 	public void run() {
@@ -46,6 +47,45 @@ public class J12_UserService {
 		System.out.println("q. 프로그램 종료");
 		System.out.println();
 	}
+//	
+	private void showUsers() {
+		J12_User[] users = userRepository.getUserTable();
+		
+		System.out.println("========<<회원 전체 조회>>========");
+		
+		for(J12_User user : users) {
+			System.out.println(user.toString());
+		}
+		
+	}
+	
+	private  void registerUser() {
+		J12_User user = new J12_User();
+		
+		System.out.println("========<<회원 등록>>========");
+		System.out.println("사용자 이름 : ");
+		user.setUsername(scanner.nextLine());
+		
+		System.out.println("비밀번호 : ");
+		user.setPassword(scanner.nextLine());
+		
+		System.out.println("성명 : ");
+		user.setName(scanner.nextLine());
+		
+		System.out.println("이메일 : ");
+		user.setEmail(scanner.nextLine());
+		
+		userRepository.saveUser(user);
+	}
+
+	private void findUser() {
+		J12_User users = userRepository.findUserByUsername(null);
+		System.out.println("사용자 이름 : ");
+		users.setUsername(scanner.nextLine());
+		
+		
+	}
+	
 	
 	private boolean mainMenu(char select) {
 		boolean flag =true;
@@ -55,11 +95,11 @@ public class J12_UserService {
 		
 		}else {
 			if(select == '1') {
-				
+				showUsers();
 		}else if(select == '2') {
-				
+				registerUser();
 		}else if(select == '3') {
-			
+				findUser();
 		}else if(select =='4') {
 			
 		}else {
