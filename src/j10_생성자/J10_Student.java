@@ -1,5 +1,5 @@
 package j10_생성자;
-
+//리턴값이 주소값이다 . 
 public class J10_Student {
 //	클래스가 가지는 변수(참조변수 ,래퍼런스변수,멤버변수)
 	String name;
