@@ -6,17 +6,16 @@ public class Main {
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
+
+		int x = 0;
 		
-		int n = 0;
+		x = scanner.nextInt();
 		
-		n = scanner.nextInt();
-	
-		for ( n = 2; n < 10; n++) {
-			for (int j = 1; j < 10; j++) {
-				int m = n * j;
-				System.out.println(n + " * " + j + " = " + m);
-			}
-		System.out.println();
+		if(x % 2 == 0 || x == 0) {
+			System.out.println("Even");
+		}else {
+			System.out.println("Odd");
 		}
+
 	}
 }
