@@ -21,12 +21,12 @@ public class ToString {
 		System.out.println(student3.toString());
 		System.out.println(student4.toString());
 
-//		Object obj = new Object();
-//		String str2 = obj;
+		Object obj = new Object();
+		String str = obj.toString();
 	
+//		String str2 = obj;
 //		System.out.println(obj);
 //
-//		String str = obj.toString();
 //		tostring을 써야지만 문자열 변수에 넣을수 있다. 
 //		tostring는 String 리턴
 //	

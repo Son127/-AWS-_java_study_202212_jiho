@@ -1,5 +1,7 @@
 package j01_출력;
 
+import j17_스태틱.싱글톤.KIA;
+
 public class Hellojava {
 	// 한 줄 주석
 	//주석 : 코드 내부에 메모를 할 때 사용함. 컴파일 시에 무시됨
@@ -19,6 +21,8 @@ public class Hellojava {
 		System.out.println("연락처: 010-5016-7504");
 		System.out.println("수업: aws기반 공공빅데이터 활용 웹개발자 양성");
 		// system out : 표준출력
+		System.out.println();
+		KIA.getInstance().printCompanyName();
 	}
 
 }

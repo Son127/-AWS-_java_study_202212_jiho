@@ -7,7 +7,6 @@ public class Subway extends Transportation{
 		System.out.println("지하철을 타고 출발");
 	}
 	
-	
 	public void stop() {
 		System.out.println("지하철을 타고 도착");
 	}
