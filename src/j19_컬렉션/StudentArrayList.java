@@ -30,7 +30,6 @@ public class StudentArrayList {
 		// 만약 searchName과 동일한 이름이 없으면 "검색실패" 출력
 
 		// 선형탐색 방법
-
 		boolean flag = true;
 		for (int i = 0; i < students.size(); i++) {
 			Student student = students.get(i);
