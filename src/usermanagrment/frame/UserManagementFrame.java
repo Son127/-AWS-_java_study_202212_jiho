@@ -2,22 +2,31 @@ package usermanagrment.frame;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import com.google.gson.JsonObject;
+
+import usermanagrment.service.UserService;
 
 public class UserManagementFrame extends JFrame {
-
+	private List<JTextField> loginFields;
+	private List<JTextField> registerFields;
 	private CardLayout mainCard;
 	private JPanel mainPanel;
 	private JTextField usernameField;
@@ -41,6 +50,10 @@ public class UserManagementFrame extends JFrame {
 	}
 
 	public UserManagementFrame() {
+
+		loginFields = new ArrayList<>();
+		registerFields = new ArrayList<>();
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 400, 500);
 		mainPanel = new JPanel();
@@ -92,6 +105,13 @@ public class UserManagementFrame extends JFrame {
 		loginPanel.add(passwordLabel);
 
 		JButton loginButton = new JButton("Login");
+
+		loginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		loginButton.setBackground(new Color(255, 255, 255));
 		loginButton.setFont(new Font("D2Coding", Font.BOLD, 16));
 		loginButton.setBounds(12, 296, 360, 43);
@@ -104,9 +124,10 @@ public class UserManagementFrame extends JFrame {
 
 		JLabel signupLink = new JLabel("sign up");
 		signupLink.addMouseListener(new MouseAdapter() {
-			@Override //익명클래스
+			@Override // 익명클래스
 			public void mouseClicked(MouseEvent e) {
-			mainCard.show(mainPanel,"registerPanel"); //show 보여주다(메인패널에서, 레지스터패널)
+				mainCard.show(mainPanel, "registerPanel"); // show 보여주다(메인패널에서, 레지스터패널)
+				clearFields(loginFields);
 			}
 		});
 		signupLink.setHorizontalAlignment(SwingConstants.LEFT);
@@ -124,73 +145,114 @@ public class UserManagementFrame extends JFrame {
 		registrePanel.setBackground(new Color(255, 255, 255));
 		mainPanel.add(registrePanel, "registerPanel");
 		registrePanel.setLayout(null);
-		
+
 		JLabel lblNewLabel = new JLabel("sign in");
-		lblNewLabel.addMouseListener(new MouseAdapter() { //Adpter패턴
+		lblNewLabel.addMouseListener(new MouseAdapter() { // Adpter패턴
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				mainCard.show(mainPanel, "loginPanel"); // 로그인패널로 돌아가기
+				clearFields(registerFields);
 			}
 		});
 		lblNewLabel.setForeground(new Color(0, 0, 255));
 		lblNewLabel.setBounds(299, 431, 73, 20);
 		registrePanel.add(lblNewLabel);
-		
+
 		JLabel registerLogoText = new JLabel("User Management");
 		registerLogoText.setHorizontalAlignment(SwingConstants.CENTER);
 		registerLogoText.setFont(new Font("D2Coding", Font.BOLD, 20));
 		registerLogoText.setBounds(12, 46, 360, 55);
 		registrePanel.add(registerLogoText);
-		
+
 		JLabel registerText = new JLabel("Register");
 		registerText.setHorizontalAlignment(SwingConstants.CENTER);
 		registerText.setFont(new Font("D2Coding", Font.BOLD, 20));
 		registerText.setBounds(12, 93, 350, 43);
 		registrePanel.add(registerText);
-		
-		JLabel registerusernameLabel = new JLabel("Username");
-		registerusernameLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
-		registerusernameLabel.setBounds(12, 146, 111, 15);
-		registrePanel.add(registerusernameLabel);
-		
+
+		JLabel registerUsernameLabel = new JLabel("username");
+		registerUsernameLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
+		registerUsernameLabel.setBounds(12, 146, 111, 15);
+		registrePanel.add(registerUsernameLabel);
+
 		registerUsernameTextField = new JTextField();
 		registerUsernameTextField.setColumns(10);
 		registerUsernameTextField.setBounds(12, 159, 360, 27);
 		registrePanel.add(registerUsernameTextField);
-		
-		JLabel reaisterPasswordLabel = new JLabel("Password");
+
+		JLabel reaisterPasswordLabel = new JLabel("password");
 		reaisterPasswordLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
 		reaisterPasswordLabel.setBounds(12, 210, 111, 15);
 		registrePanel.add(reaisterPasswordLabel);
-		
+
 		registerPasswordField = new JPasswordField();
 		registerPasswordField.setBounds(12, 222, 360, 27);
 		registrePanel.add(registerPasswordField);
-		
-		JLabel registerNameLabel =new JLabel("name");
+
+		JLabel registerNameLabel = new JLabel("name");
 		registerNameLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
 		registerNameLabel.setBounds(12, 272, 111, 15);
 		registrePanel.add(registerNameLabel);
-		
+
 		registerNameTextField = new JTextField();
 		registerNameTextField.setColumns(10);
 		registerNameTextField.setBounds(12, 285, 360, 27);
 		registrePanel.add(registerNameTextField);
-		
+
 		JLabel registerEamilLabel = new JLabel("email");
 		registerEamilLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
 		registerEamilLabel.setBounds(12, 334, 111, 15);
 		registrePanel.add(registerEamilLabel);
-		
+
 		registerEmailTextField = new JTextField();
 		registerEmailTextField.setColumns(10);
 		registerEmailTextField.setBounds(12, 348, 360, 27);
 		registrePanel.add(registerEmailTextField);
-		
+
 		JButton registreBtn = new JButton("Registre");
+		registreBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JsonObject userJson = new JsonObject();
+				userJson.addProperty("username", registerUsernameTextField.getText());
+				userJson.addProperty("password", registerPasswordField.getText());
+				userJson.addProperty("name", registerNameTextField.getText());
+				userJson.addProperty("email", registerEmailTextField.getText());
+
+				UserService userService = UserService.getInstance();
+
+				Map<String, String> response = userService.register(userJson.toString());
+				// key값안에 들어있는지
+				if (response.containsKey("error")) {
+					JOptionPane.showMessageDialog(null, response.get("error"), "error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				JOptionPane.showMessageDialog(null, response.get("ok"), "ok", JOptionPane.INFORMATION_MESSAGE);
+				mainCard.show(mainPanel, "loginPanel");
+				clearFields(registerFields);
+			}
+		});
 		registreBtn.setFont(new Font("D2Coding", Font.BOLD, 16));
 		registreBtn.setBackground(Color.WHITE);
 		registreBtn.setBounds(12, 385, 360, 43);
 		registrePanel.add(registreBtn);
+
+		loginFields.add(usernameField);
+		loginFields.add(passwordField);
+
+		registerFields.add(registerUsernameTextField);
+		registerFields.add(registerPasswordField);
+		registerFields.add(registerNameTextField);
+		registerFields.add(registerEmailTextField);
 	}
+
+	private void clearFields(List<JTextField> textFields) {
+		for (JTextField field : textFields) {
+			if (field.getText().isEmpty()) {
+				continue;
+			}
+			field.setText("");
+		}
+	}
+
 }
