@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.xml.transform.stax.StAXSource;
 
 import com.google.gson.JsonObject;
 
@@ -99,7 +100,7 @@ public class UserManagementFrame extends JFrame {
 		usernameLabel.setBounds(12, 160, 111, 15);
 		loginPanel.add(usernameLabel);
 
-		JLabel passwordLabel = new JLabel("Password");
+		JLabel passwordLabel = new JLabel("password");
 		passwordLabel.setFont(new Font("D2Coding", Font.BOLD, 12));
 		passwordLabel.setBounds(12, 224, 111, 15);
 		loginPanel.add(passwordLabel);
@@ -109,9 +110,24 @@ public class UserManagementFrame extends JFrame {
 		loginButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				JsonObject loginUser = new JsonObject();
+				loginUser.addProperty("usernameAndEamil",usernameField.getText());
+				loginUser.addProperty("password",passwordField.getText());
+//				System.out.println(loginUser.toString());
+
+				UserService service = UserService.getInstance();
+
+				Map<String, String> response = service.authotize(loginUser.toString());
+
+				if (response.containsKey("error")) {
+					JOptionPane.showMessageDialog(null, response.get("error"), "error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				JOptionPane.showMessageDialog(null, response.get("ok"), "ok", JOptionPane.INFORMATION_MESSAGE);
 				
 			}
 		});
+		
 		loginButton.setBackground(new Color(255, 255, 255));
 		loginButton.setFont(new Font("D2Coding", Font.BOLD, 16));
 		loginButton.setBounds(12, 296, 360, 43);
@@ -215,7 +231,7 @@ public class UserManagementFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				JsonObject userJson = new JsonObject();
 				userJson.addProperty("username", registerUsernameTextField.getText());
-				userJson.addProperty("password", registerPasswordField.getText());
+				userJson.addProperty("password",registerPasswordField.getText());
 				userJson.addProperty("name", registerNameTextField.getText());
 				userJson.addProperty("email", registerEmailTextField.getText());
 
