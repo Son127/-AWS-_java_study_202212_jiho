@@ -3,6 +3,8 @@ package usermanagrment.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import usermanagrment.entity.User;
 
 public class UserRepository {
@@ -19,7 +21,12 @@ public class UserRepository {
 
 	private UserRepository() {
 		userDataList = new ArrayList<>();
-		userDataList.add(User.builder().username("aaa").password("1234").name("손지호").email("asd@gmail.com").build());
+		userDataList.add(User.builder()
+				.username("aaaa")
+				.password(BCrypt.hashpw("1234",BCrypt.gensalt()))
+				.name("손지호")
+				.email("asd@gmail.com")
+				.build());
 	}
 
 	public void saveUser(User user) {
