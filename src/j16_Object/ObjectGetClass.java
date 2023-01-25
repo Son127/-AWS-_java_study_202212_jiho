@@ -13,7 +13,7 @@ public class ObjectGetClass {
 
 		System.out.println(student.getClass().getName());
 
-		Class studentClass = student.getClass();
+		Class<? extends Student> studentClass = student.getClass();
 
 		String classname = studentClass.getName();
 

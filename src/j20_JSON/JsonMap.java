@@ -16,7 +16,7 @@ public class JsonMap {
 
 		gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
-		Map<String, Object> user = new HashMap();
+		Map<String, Object> user = new HashMap<String, Object>();
 		user.put("username", "aaa");
 		user.put("password", "12354");
 
