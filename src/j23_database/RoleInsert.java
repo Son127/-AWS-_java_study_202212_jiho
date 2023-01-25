@@ -34,8 +34,8 @@ public class RoleInsert {
 			
 			int newKey = 0;
 			
-			ResultSet rs = pstmt.getGeneratedKeys();
-			if(rs.next()) {
+			ResultSet rs = pstmt.getGeneratedKeys(); // select 문의 결과값을 rs에 대입.
+			if(rs.next()) { // .next()는 다음행으로 내려가서 값이 있으면 true 없으면 false를 반환한다 
 				newKey = rs.getInt(1); 
 			}
 			System.out.println(newKey != 0 ? "새로운 키값: " + newKey : "키가 생성되지 않음");
