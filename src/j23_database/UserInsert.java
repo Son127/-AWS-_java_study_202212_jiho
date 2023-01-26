@@ -22,9 +22,9 @@ public class UserInsert {
 	public int saveUser(User user) {
 		int successCount = 0;
 		String sql = null;
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+		Connection connection = null; // db연결
+		PreparedStatement preparedStatement = null; // 쿼리 실행문을 받아서 실행
+		ResultSet resultSet = null; //쿼리 실행을 담기위한것
 
 		try {
 			connection = pool.getConnection(); // try,catch로 예외처리
@@ -49,16 +49,17 @@ public class UserInsert {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return successCount;
 	}
 
 	public static int saveRoles(Map<String, Object> map) {
+		
 		int successCount = 0;
 		String sql = null;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
+		
 		try {
 			connection = pool.getConnection();
 			List<Integer> roles = (List<Integer>) map.get("roles");
@@ -67,8 +68,11 @@ public class UserInsert {
 			sql = "insert into role_dlt values ";
 
 			for (int i = 0; i < roles.size(); i++) {
+
 				sql += "(0, ?, ?,)";
+			
 				if (i < roles.size() - 1) {
+
 					sql += ",";
 				}
 			}
@@ -76,9 +80,12 @@ public class UserInsert {
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (int i = 0; i < roles.size(); i++) {
-				preparedStatement.setInt((i * 2) + 1, roles.get(i));
+			
+				preparedStatement.setInt((i * 2) + 1, roles.get(i)); 
 				preparedStatement.setInt((i * 2) + 2, user.getUserId());
+			
 			}
+			
 			successCount = preparedStatement.executeUpdate();
 
 		} catch (Exception e) {
@@ -105,7 +112,11 @@ public class UserInsert {
 		System.out.println(user);
 
 		/* =================================================== */
-
+		
+		/*
+		 * list 반복을 많이 해야할때
+		 * map (임시 객체) 지정해놓은 키값으로 바로 조회하고 싶을때
+		 */
 		List<Integer> rolesIdList = new ArrayList<>();
 		rolesIdList.add(1);
 		rolesIdList.add(2);

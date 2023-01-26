@@ -4,13 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.management.relation.Role;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import usermanagrment.entity.RoleDtl;
 import usermanagrment.entity.User;
 import usermanagrment.repository.UserRepository;
+import usermanagrment.repository.UserRepositoryArratList;
 
 public class UserService {
 
@@ -27,7 +31,7 @@ public class UserService {
 	}
 
 	private UserService() {
-		userRepository = UserRepository.getInstance();
+		userRepository = UserRepository.getIntance();
 		gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
@@ -62,8 +66,15 @@ public class UserService {
 		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
 		userRepository.saveUser(user);
+		
 		System.out.println("암호화 후 ");
 		System.out.println(user);
+		
+		RoleDtl	roleDtl = RoleDtl.builder()
+				.roleId(3)
+				.userId(user.getUserId())
+				.build();
+		
 		response.put("ok", "회원가입 성공");
 
 		return response;
@@ -75,7 +86,7 @@ public class UserService {
 	}
 
 	private boolean duplicatedEmail(String email) {
-		return userRepository.findUserByEamil(email) != null;
+		return userRepository.findUserByEmail(email) != null;
 	}
 
 	public Map<String, String> authotize(String loginUserJSon) {
@@ -93,7 +104,7 @@ public class UserService {
 
 		if (user == null) {
 			
-			user = userRepository.findUserByEamil(usernameAndEmail);
+			user = userRepository.findUserByEmail(usernameAndEmail);
 			
 			
 			if (user == null) {

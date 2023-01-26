@@ -1,5 +1,7 @@
 package usermanagrment.entity;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +14,8 @@ public class User {
 	private String password;
 	private String name;
 	private String email;
+	
+	private List<RoleDtl> roleDtl;
 	
 
 }

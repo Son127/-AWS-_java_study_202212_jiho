@@ -21,12 +21,12 @@ values
 select * from role_dtl;
 
 select
-	um.user_name,
-    um.user_password,
+	um.username,
+    um.userpassword,
     um.name,
     um.email,
     rd.role_id,
-    rm.role_name
+    rm.rolename
 from
 	user_mst um
     left outer join role_dtl rd on(rd.user_id = um.user_id)
