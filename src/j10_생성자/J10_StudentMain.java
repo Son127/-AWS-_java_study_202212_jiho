@@ -6,7 +6,7 @@ public class J10_StudentMain {
 		
 		J10_Student s1 = new J10_Student("rkrkrk", 22);
 		s1.printInfo();
-		
+		System.out.println(s1);
 	}
 
 }

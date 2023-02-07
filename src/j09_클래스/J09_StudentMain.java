@@ -17,7 +17,7 @@ public class J09_StudentMain {
 		J09_Student s1 = new J09_Student();
 		J09_Student s2 = new J09_Student();
 		
-		s1.name = "와나다";
+		s1.name = "와나나";
 		s1.age = 123;
 		
 		s1. printInfo();

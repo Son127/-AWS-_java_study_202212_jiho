@@ -2,7 +2,9 @@ package j12_배열;
 
 // length 문자 길이
 public class Array2 {
+	
 	public static void printNames(String[] names) {
+		
 		for(int i = 0; i < names.length; i++){
 			System.out.println("이름[" + (i + 1) + "]: " + names[i]);
 		}

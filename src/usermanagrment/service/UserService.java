@@ -74,6 +74,8 @@ public class UserService {
 				.roleId(3)
 				.userId(user.getUserId())
 				.build();
+				
+		userRepository.saveRoleDtl(roleDtl);
 		
 		response.put("ok", "회원가입 성공");
 
