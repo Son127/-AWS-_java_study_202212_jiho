@@ -16,7 +16,11 @@ public class Server {
 			
 			//클라이언트에 접속을 받는 무한루프
 			while(true) {
-				Socket socket = serverSocket.accept();
+				
+				//클라이언트의 연결을 기다림.
+				Socket socket = serverSocket.accept(); 
+				
+				// 클라이언트가 연결이 되면 소켓객체를 하나 생성
 				SocketServer socketServer = new SocketServer(socket);
 				socketServer.start();
 		}

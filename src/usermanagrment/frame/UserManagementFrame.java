@@ -7,6 +7,14 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.ConnectException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +29,22 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.xml.transform.stax.StAXSource;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import usermanagrment.dto.RequestDto;
+import usermanagrment.dto.ResponseDto;
 import usermanagrment.service.UserService;
 
 public class UserManagementFrame extends JFrame {
+
+	private static Socket socket;
+	private InputStream inputStream;
+	private OutputStream outputStream;
+	private BufferedReader reader;
+	private PrintWriter writer;
+	private Gson gson;
+	
 	private List<JTextField> loginFields;
 	private List<JTextField> registerFields;
 	private CardLayout mainCard;
@@ -38,11 +57,16 @@ public class UserManagementFrame extends JFrame {
 	private JTextField registerEmailTextField;
 
 	public static void main(String[] args) {
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					socket = new Socket("127.0.0.1", 9090);
+
 					UserManagementFrame frame = new UserManagementFrame();
 					frame.setVisible(true);
+				} catch (ConnectException e) {
+					JOptionPane.showMessageDialog(null, "접속실패","서버에 연결할 수 없습니다", JOptionPane.ERROR_MESSAGE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -51,6 +75,17 @@ public class UserManagementFrame extends JFrame {
 	}
 
 	public UserManagementFrame() {
+
+		try {
+			inputStream = socket.getInputStream();
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+			outputStream = socket.getOutputStream();
+			writer = new PrintWriter(outputStream, true);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		gson = new Gson();
 
 		loginFields = new ArrayList<>();
 		registerFields = new ArrayList<>();
@@ -111,8 +146,8 @@ public class UserManagementFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JsonObject loginUser = new JsonObject();
-				loginUser.addProperty("usernameAndEamil",usernameField.getText());
-				loginUser.addProperty("password",passwordField.getText());
+				loginUser.addProperty("usernameAndEamil", usernameField.getText());
+				loginUser.addProperty("password", passwordField.getText());
 //				System.out.println(loginUser.toString());
 
 				UserService service = UserService.getInstance();
@@ -124,10 +159,10 @@ public class UserManagementFrame extends JFrame {
 					return;
 				}
 				JOptionPane.showMessageDialog(null, response.get("ok"), "ok", JOptionPane.INFORMATION_MESSAGE);
-				
+
 			}
 		});
-		
+
 		loginButton.setBackground(new Color(255, 255, 255));
 		loginButton.setFont(new Font("D2Coding", Font.BOLD, 16));
 		loginButton.setBounds(12, 296, 360, 43);
@@ -231,21 +266,46 @@ public class UserManagementFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				JsonObject userJson = new JsonObject();
 				userJson.addProperty("username", registerUsernameTextField.getText());
-				userJson.addProperty("password",registerPasswordField.getText());
+				userJson.addProperty("password", registerPasswordField.getText());
 				userJson.addProperty("name", registerNameTextField.getText());
 				userJson.addProperty("email", registerEmailTextField.getText());
-
-				UserService userService = UserService.getInstance();
-
-				Map<String, String> response = userService.register(userJson.toString());
-				// key값안에 들어있는지
-				if (response.containsKey("error")) {
-					JOptionPane.showMessageDialog(null, response.get("error"), "error", JOptionPane.ERROR_MESSAGE);
-					return;
+				
+				RequestDto<String> requestDto = new RequestDto<String>("register", userJson.toString());
+				writer.println(gson.toJson(requestDto));
+				writer.flush();
+				
+				try {
+					String response = reader.readLine();
+					System.out.println("응답");
+					ResponseDto<?> responseDto = gson.fromJson(response , ResponseDto.class);
+					if(responseDto.getCode().equals("error")) {
+						JOptionPane.showMessageDialog(null, responseDto.getBody(),responseDto.getCode(), JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
+					JOptionPane.showMessageDialog(null, responseDto.getBody(), responseDto.getCode(), JOptionPane.INFORMATION_MESSAGE);
+					mainCard.show(mainPanel, "loginPanel");
+					clearFields(registerFields);
+					
+					System.out.println(gson.fromJson(response,ResponseDto.class));
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}finally {
+					
 				}
-				JOptionPane.showMessageDialog(null, response.get("ok"), "ok", JOptionPane.INFORMATION_MESSAGE);
-				mainCard.show(mainPanel, "loginPanel");
-				clearFields(registerFields);
+
+//				UserService userService = UserService.getInstance();
+//
+//				Map<String, String> response = userService.register(userJson.toString());
+//				// key값안에 들어있는지
+//				if (response.containsKey("error")) {
+//					JOptionPane.showMessageDialog(null, response.get("error"), "error", JOptionPane.ERROR_MESSAGE);
+//					return;
+//				}
+//				JOptionPane.showMessageDialog(null, response.get("ok"), "ok", JOptionPane.INFORMATION_MESSAGE);
+//				mainCard.show(mainPanel, "loginPanel");
+//				clearFields(registerFields);
 			}
 		});
 		registreBtn.setFont(new Font("D2Coding", Font.BOLD, 16));

@@ -21,10 +21,8 @@ public class ClienReicive extends Thread {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
 			while (true) {
-				if (Client.name != null) {
 					System.out.println(reader.readLine());
 				}
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
